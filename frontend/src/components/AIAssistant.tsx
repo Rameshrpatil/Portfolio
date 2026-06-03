@@ -46,20 +46,34 @@ export default function AIAssistant() {
     setLoading(false);
   };
 
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    // Show tooltip after 2 seconds
+    const showTimer = setTimeout(() => setShowTooltip(true), 2000);
+    // Hide tooltip after 8 seconds (visible for 6 seconds)
+    const hideTimer = setTimeout(() => setShowTooltip(false), 8000);
+    return () => { clearTimeout(showTimer); clearTimeout(hideTimer); };
+  }, []);
+
   return (
     <>
       <AnimatePresence>
         {!isOpen && (
           <div className="fixed bottom-6 right-6 z-50 flex items-center justify-end">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ delay: 2, duration: 0.5 }}
-              className="absolute right-14 mr-2 px-4 py-2 bg-secondary/90 backdrop-blur text-foreground text-sm font-semibold rounded-full shadow-xl whitespace-nowrap pointer-events-none border border-border/50"
-            >
-              Ask me anything! 👋
-            </motion.div>
+            <AnimatePresence>
+              {showTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute right-14 mr-2 px-4 py-2 bg-secondary/90 backdrop-blur text-foreground text-sm font-semibold rounded-full shadow-xl whitespace-nowrap pointer-events-none border border-border/50"
+                >
+                  Ask me anything! 👋
+                </motion.div>
+              )}
+            </AnimatePresence>
             <motion.button
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
