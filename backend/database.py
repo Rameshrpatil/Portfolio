@@ -2,8 +2,10 @@ import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-# Load environment variables from the parent directory's .env file
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+# Try loading from multiple possible .env locations
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))  # Local root
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))       # Local backend (Render Root)
+load_dotenv(dotenv_path='/etc/secrets/.env')                                   # Render Secret Files
 
 url: str = os.environ.get("VITE_SUPABASE_URL") or os.environ.get("SUPABASE_URL")
 # Try service role, then anon key, then generic supabase_key
