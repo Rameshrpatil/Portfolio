@@ -152,7 +152,7 @@ export default function Home() {
                         <span className="text-green-400">"Python"</span>, <span className="text-green-400">"FastAPI"</span>, <span className="text-green-400">"Go"</span>,<br/>
                       </span>
                       <span className="pl-4">
-                        <span className="text-green-400">"React"</span>, <span className="text-green-400">"TypeScript"</span>, <span className="text-green-400">"Tailwind"</span><br/>
+                        <span className="text-green-400">"PyTorch"</span>, <span className="text-green-400">"Docker"</span>, <span className="text-green-400">"Milvus"</span><br/>
                       </span>
                       ]
                     </div>
@@ -194,8 +194,8 @@ export default function Home() {
                 to: "/projects", icon: TerminalSquare
               },
               { 
-                num: "03", label: "SKILLS", title: "Full-Stack & ML Capabilities", 
-                desc: "Python, FastAPI, PyTorch, Milvus, RabbitMQ, Celery, Docker, React, TypeScript.", 
+                num: "03", label: "SKILLS", title: "Backend & ML Capabilities", 
+                desc: "Python, FastAPI, PyTorch, Milvus, RabbitMQ, Celery, Docker, Postgres.", 
                 to: "/skills", icon: Cpu
               },
             ].map((c, i) => (
