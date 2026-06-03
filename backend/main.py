@@ -13,12 +13,8 @@ app = FastAPI(
 # Configure CORS for the frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", 
-        "http://127.0.0.1:5173",
-        "https://rameshpatil.netlify.app"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"], # Allow all mobile apps and webviews
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

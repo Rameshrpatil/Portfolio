@@ -50,16 +50,27 @@ export default function AIAssistant() {
     <>
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            onClick={() => setIsOpen(true)}
-            aria-label="Open AI Assistant"
-            className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-50 border-4 border-background"
-          >
-            <MessageSquare size={24} />
-          </motion.button>
+          <div className="fixed bottom-6 right-6 z-50 flex items-center justify-end">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ delay: 2, duration: 0.5 }}
+              className="absolute right-14 mr-2 px-4 py-2 bg-secondary/90 backdrop-blur text-foreground text-sm font-semibold rounded-full shadow-xl whitespace-nowrap pointer-events-none border border-border/50"
+            >
+              Ask me anything! 👋
+            </motion.div>
+            <motion.button
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              onClick={() => setIsOpen(true)}
+              aria-label="Open AI Assistant"
+              className="relative w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform border-4 border-background"
+            >
+              <MessageSquare size={24} />
+            </motion.button>
+          </div>
         )}
       </AnimatePresence>
 
