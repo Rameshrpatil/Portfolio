@@ -84,9 +84,10 @@ export default function About() {
               <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏔️ Trekking</span>
               <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏀 Basketball</span>
               <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏊‍♂️ Swimming</span>
+              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏍️ Bike Riding</span>
             </div>
             <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
-              When I'm not architecting systems, you can find me hiking rugged nature trails, playing competitive basketball, or swimming to stay active and refreshed.
+              When I'm not architecting systems, you can find me hiking rugged nature trails, playing competitive basketball, swimming to stay refreshed, or enjoying the open road on a long bike ride.
             </p>
           </div>
         </motion.div>
