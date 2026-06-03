@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { User, GraduationCap, MapPin, Mail, Award, Quote } from "lucide-react";
+import { User, GraduationCap, MapPin, Mail, Award, Quote, Compass } from "lucide-react";
 import resumeData from "../data/resume.json";
 const { profile, education, stats, endorsements } = resumeData;
 import SEO from "../components/SEO";
@@ -73,6 +73,21 @@ export default function About() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Hobbies Card */}
+          <div className="bg-secondary/20 border border-border/50 rounded-2xl p-6">
+            <h3 className="font-bold text-lg mb-4 border-b border-border/50 pb-2 flex items-center gap-2">
+              <Compass className="text-primary" size={20} /> Beyond the Screen
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏔️ Trekking</span>
+              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏀 Basketball</span>
+              <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-semibold rounded-full border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">🏊‍♂️ Swimming</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+              When I'm not architecting systems, you can find me hiking rugged nature trails, playing competitive basketball, or swimming to stay active and refreshed.
+            </p>
           </div>
         </motion.div>
 
