@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Soft, warm cream background */
+    --background: 40 30% 97%;
+    --foreground: 240 8% 30%;
+
+    /* #b8620a */
+    --primary: 30 90% 38%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Softer secondaries and borders */
+    --secondary: 40 25% 92%;
+    --secondary-foreground: 30 90% 38%;
+
+    --muted: 40 25% 92%;
+    --muted-foreground: 240 5% 50%;
+
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 30 90% 38%;
+
+    --radius: 0.5rem;
+    
+    /* Variables used by hint */
+    --cream3: #8a8174;
+    --amber: #b8620a;
+  }
+
+  .dark {
+    --background: 240 10% 12%; 
+    --foreground: 0 0% 98%;
+
+    --primary: 30 90% 55%;
+    --primary-foreground: 240 5.9% 10%;
+
+    --secondary: 240 3.7% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 18%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --border: 240 3.7% 20%;
+    --input: 240 3.7% 20%;
+    --ring: 30 90% 55%;
+    
+    --cream3: #b0a89d;
+    --amber: #f29c46;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Page navigation hint arrows */
+.page-nav-hint {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  animation: hintFade 2.5s ease 1.5s forwards;
+  pointer-events: none;
+}
+@keyframes hintFade {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  30%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  70%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(6px); }
+}
+.page-nav-hint span {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cream3);
+}
+.page-nav-hint svg {
+  color: var(--amber);
+  animation: bounce 1.2s ease infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(4px); }
+}
