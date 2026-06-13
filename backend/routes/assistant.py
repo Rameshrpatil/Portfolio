@@ -68,7 +68,7 @@ def search_portfolio_knowledge(query: str) -> str:
 # Initialize Agent
 if api_key:
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7)
-    agent_executor = create_react_agent(llm, tools=[search_portfolio_knowledge], state_modifier=SYSTEM_INSTRUCTION)
+    agent_executor = create_react_agent(llm, tools=[search_portfolio_knowledge], prompt=SYSTEM_INSTRUCTION)
 else:
     agent_executor = None
 
