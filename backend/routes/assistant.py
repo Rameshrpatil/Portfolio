@@ -1,20 +1,23 @@
 import os
+import traceback
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from google import genai
-from google.genai import types
+from typing import List, Dict
+
+# LangChain / LangGraph imports
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.tools import tool
+from langgraph.prebuilt import create_react_agent
 
 router = APIRouter(prefix="/assistant", tags=["assistant"])
 
-# We initialize the client if the key is available
 api_key = os.environ.get("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key) if api_key else None
 
 class ChatRequest(BaseModel):
     message: str
-    history: list[dict] = []
+    history: List[Dict] = []
 
-# This is the system prompt that primes the AI to act as Ramesh
 SYSTEM_INSTRUCTION = """
 You are Ramesh Patil's AI Assistant. You are a helpful, professional, and friendly virtual assistant embedded in his portfolio website.
 Your goal is to answer questions from recruiters and engineers about Ramesh's background, skills, and experience.
@@ -33,58 +36,70 @@ Guidelines:
 3. Keep your answers concise, professional, and directly relevant to the user's question.
 4. If asked something outside of Ramesh's professional background, politely redirect the conversation back to his skills and experience.
 5. If someone wants to hire him, encourage them to use the Contact form or email him directly.
+6. Always use the `search_portfolio_knowledge` tool first if you need specific details about his projects, experience, or resume before answering.
 """
 
-@router.post("/ask")
-async def ask_assistant(req: ChatRequest):
-    if not client:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured in the backend.")
-    
+@tool
+def search_portfolio_knowledge(query: str) -> str:
+    """Search Ramesh's resume and portfolio knowledge base for specific details about his experience, projects, or skills."""
+    if not api_key:
+        return "Error: GEMINI_API_KEY is not configured."
+        
     try:
-        # Convert frontend history to GenAI history format
-        # frontend history format: [{role: "user" | "model", parts: [{text: "..."}]}]
-        formatted_history = []
-        for msg in req.history:
-            role = "user" if msg["role"] == "user" else "model"
-            text = msg["parts"][0]["text"]
-            formatted_history.append(types.Content(role=role, parts=[types.Part.from_text(text=text)]))
-        
-        # 1. Embed the user's query
-        query_embedding_res = client.models.embed_content(
-            model="gemini-embedding-2",
-            contents=req.message
-        )
-        query_vector = query_embedding_res.embeddings[0].values
-        
-        # 2. Retrieve relevant context from Supabase pgvector
-        # Note: We must import supabase from database
         from database import supabase
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-2")
+        query_vector = embeddings.embed_query(query)
         
         rpc_res = supabase.rpc("match_documents", {
             "query_embedding": query_vector,
-            "match_threshold": 0.5, # minimum similarity score
-            "match_count": 3 # return top 3 chunks
+            "match_threshold": 0.5,
+            "match_count": 3
         }).execute()
         
-        retrieved_context = "\n".join([item["content"] for item in rpc_res.data]) if rpc_res.data else "No specific context found."
-        
-        # 3. Augment the system prompt
-        augmented_system_instruction = SYSTEM_INSTRUCTION + "\n\n### RELEVANT KNOWLEDGE BASE CONTEXT ###\n" + retrieved_context
+        if not rpc_res.data:
+            return "No specific context found in the knowledge base."
+            
+        retrieved_context = "\n---\n".join([item["content"] for item in rpc_res.data])
+        return retrieved_context
+    except Exception as e:
+        traceback.print_exc()
+        return f"Error retrieving knowledge: {str(e)}"
 
-        # 4. Generate the response
-        chat = client.chats.create(
-            model="gemini-2.5-flash",
-            config=types.GenerateContentConfig(
-                system_instruction=augmented_system_instruction,
-                temperature=0.7,
-            ),
-            history=formatted_history
-        )
+# Initialize Agent
+if api_key:
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7)
+    agent_executor = create_react_agent(llm, tools=[search_portfolio_knowledge], state_modifier=SYSTEM_INSTRUCTION)
+else:
+    agent_executor = None
+
+@router.post("/ask")
+async def ask_assistant(req: ChatRequest):
+    if not agent_executor:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured in the backend.")
+    
+    try:
+        # Convert frontend history to LangChain messages
+        langchain_history = []
+        for msg in req.history:
+            role = msg.get("role")
+            text = msg["parts"][0]["text"]
+            if role == "user":
+                langchain_history.append(HumanMessage(content=text))
+            else:
+                langchain_history.append(AIMessage(content=text))
+                
+        # Append the current user message
+        langchain_history.append(HumanMessage(content=req.message))
         
-        response = chat.send_message(req.message)
-        return {"response": response.text}
+        # Invoke LangGraph Agent
+        # The agent automatically streams/traces to LangSmith if env vars are present
+        result = await agent_executor.ainvoke({"messages": langchain_history})
+        
+        # The final message is the last one in the state
+        final_message = result["messages"][-1].content
+        
+        return {"response": final_message}
         
     except Exception as e:
-        import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail="Failed to generate AI response")
