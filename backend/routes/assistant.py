@@ -98,6 +98,18 @@ async def ask_assistant(req: ChatRequest):
         # The final message is the last one in the state
         final_message = result["messages"][-1].content
         
+        # Ensure final_message is a string (Gemini sometimes returns a list of parts)
+        if isinstance(final_message, list):
+            text_parts = []
+            for part in final_message:
+                if isinstance(part, str):
+                    text_parts.append(part)
+                elif isinstance(part, dict) and "text" in part:
+                    text_parts.append(part["text"])
+            final_message = " ".join(text_parts)
+        elif not isinstance(final_message, str):
+            final_message = str(final_message)
+        
         return {"response": final_message}
         
     except Exception as e:

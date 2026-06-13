@@ -123,12 +123,12 @@ export default function AIAssistant() {
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`}>
                     {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
                   </div>
-                  <div className={`p-3 rounded-2xl max-w-[75%] text-sm leading-relaxed ${
+                  <div className={`p-3 rounded-2xl max-w-[75%] text-sm leading-relaxed whitespace-pre-wrap ${
                     msg.role === "user" 
                       ? "bg-primary text-primary-foreground rounded-tr-sm" 
                       : "bg-secondary/50 text-foreground border border-border/50 rounded-tl-sm"
                   }`}>
-                    {msg.parts[0].text}
+                    {typeof msg.parts[0].text === 'string' ? msg.parts[0].text : JSON.stringify(msg.parts[0].text)}
                   </div>
                 </div>
               ))}
