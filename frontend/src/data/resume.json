@@ -32,8 +32,8 @@
   "experience": [
     {
       "company": "Dynamisch IT Pvt. Ltd.",
-      "role": "Software Engineer",
-      "period": "Jan 2024 – Present",
+      "role": "Software Engineer (AI/ML)",
+      "period": "Jan 2024 – May 2026",
       "location": "Pune, Maharashtra",
       "current": true,
       "projects": [
@@ -274,7 +274,7 @@
         "Integrated enterprise platforms including HubSpot and Stripe",
         "Implemented JWT, OTP, and Two-Factor Authentication (2FA)",
         "Automated reporting workflows using scheduled background jobs",
-        "Developed real-time dashboards with CI/CD-enabled deployment pipelines"
+        "Enhanced data visualization and analytics using Pandas and Matplotlib"
       ],
       "tags": [
         "Python",
@@ -290,6 +290,28 @@
     }
   ],
   "personalProjects": [
+    {
+      "title": "ObserveAI",
+      "subtitle": "Autonomous AIOps Platform",
+      "category": "Personal R&D",
+      "desc": "An agentic AI platform powered by LLMs, OpenTelemetry, and RAG to detect production anomalies, perform root cause analysis, and autonomously remediate incidents across distributed microservices.",
+      "highlights": [
+        "LLM-powered anomaly detection and root cause analysis from logs and traces",
+        "Dynamic service dependency mapping with blast-radius impact assessment",
+        "RAG-based incident intelligence using historical remediation knowledge",
+        "Autonomous Docker and Kubernetes remediation with built-in safety guardrails"
+      ],
+      "tags": [
+        "Python",
+        "LLMs",
+        "OpenTelemetry",
+        "RAG",
+        "Kubernetes",
+        "Docker",
+        "Agentic AI"
+      ],
+      "color": "#4f8cff"
+    },
     {
       "title": "Resume ATS Scorer & Optimiser",
       "subtitle": "Agentic AI",

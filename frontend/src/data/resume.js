@@ -21,8 +21,8 @@ export const stats = [
 export const experience = [
   {
     company:  "Dynamisch IT Pvt. Ltd.",
-    role:     "Software Engineer",
-    period:   "Jan 2024 – Present",
+    role:     "Software Engineer (AI/ML)",
+    period:   "Jan 2024 – May 2026",
     location: "Pune, Maharashtra",
     current:  true,
     projects: [
@@ -193,6 +193,29 @@ export const workProjects = [
 ];
 
 export const personalProjects = [
+  {
+  title:      "ObserveAI",
+  subtitle:   "Autonomous AIOps Platform",
+  category:   "Personal R&D",
+  desc:       "An AI-driven observability and self-healing platform that leverages LLMs, OpenTelemetry, and multi-agent orchestration to detect anomalies, perform root cause analysis, and autonomously remediate incidents across distributed microservices.",
+  highlights: [
+  "Real-time anomaly detection from logs and distributed traces",
+  "Dynamic service dependency discovery and blast-radius analysis",
+  "RAG-powered incident intelligence using historical remediation knowledge",
+  "Autonomous Docker and Kubernetes remediation with safety guardrails",
+  ],
+  tags: [
+  "Python",
+  "FastAPI",
+  "LLMs",
+  "OpenTelemetry",
+  "RAG",
+  "Kubernetes",
+  "Docker",
+  "Agentic AI"
+  ],
+  color: "#4f8cff",
+  },
   {
     title:      "Resume ATS Scorer & Optimiser",
     subtitle:   "Agentic AI",
