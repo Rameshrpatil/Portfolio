@@ -8,6 +8,9 @@ class GuestbookSignature(BaseModel):
     name: str
     message: str
 
+class GuestbookReaction(BaseModel):
+    reaction: str
+
 @router.get("/")
 async def get_signatures():
     try:
@@ -40,3 +43,14 @@ async def sign_guestbook(signature: GuestbookSignature):
     except Exception as e:
         print(f"Error signing guestbook: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to sign guestbook")
+
+@router.patch("/{id}/react")
+async def react_guestbook(id: str, payload: GuestbookReaction):
+    try:
+        data, count = supabase.table("guestbook").update({
+            "admin_reaction": payload.reaction
+        }).eq("id", id).execute()
+        return {"status": "success", "reaction": payload.reaction}
+    except Exception as e:
+        print(f"Error reacting to guestbook: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to add reaction")

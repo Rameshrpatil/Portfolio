@@ -31,6 +31,16 @@ export const api = {
     return res.json();
   },
 
+  reactToGuestbook: async (id: string, reaction: string) => {
+    const res = await fetch(`${API_BASE_URL}/guestbook/${id}/react`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reaction }),
+    });
+    if (!res.ok) throw new Error("Failed to add reaction to guestbook");
+    return res.json();
+  },
+
   // Blog
   getPosts: async () => {
     const res = await fetch(`${API_BASE_URL}/blog/`);

@@ -15,6 +15,7 @@ type Signature = {
   name: string;
   message: string;
   created_at: string;
+  admin_reaction?: string;
 };
 
 export default function Guestbook() {
@@ -111,8 +112,14 @@ export default function Guestbook() {
                     visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: idx * 0.05 } }
                   }}
                   key={sig.id}
-                  className="bg-secondary/20 border border-border/50 rounded-2xl p-6 hover:border-primary/30 transition-colors"
+                  className={`bg-secondary/20 border ${sig.admin_reaction ? 'border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.1)]' : 'border-border/50'} rounded-2xl p-6 hover:border-primary/30 transition-colors relative mt-4`}
                 >
+                  {/* Reaction Badge */}
+                  {sig.admin_reaction && (
+                    <div className="absolute -top-3 -right-2 md:-right-4 bg-background border border-primary/30 text-primary px-3 py-1.5 rounded-full text-xs font-semibold shadow-xl flex items-center gap-1.5 z-10">
+                      <span className="text-base leading-none">{sig.admin_reaction}</span> Appreciated
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
                       {sig.name.charAt(0).toUpperCase()}

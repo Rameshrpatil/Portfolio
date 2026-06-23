@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 import { api } from "../lib/api";
-import { LogOut, LayoutDashboard, MessageSquare, BookOpen, Settings, Mail, MailOpen, Activity, Users } from "lucide-react";
+import { LogOut, LayoutDashboard, MessageSquare, BookOpen, Settings, Mail, MailOpen, Activity, Users, BookHeart, SmilePlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import SEO from "../components/SEO";
@@ -23,17 +23,29 @@ type AnalyticsStats = {
   chart_data: { name: string; views: number }[];
 };
 
+type GuestbookSignature = {
+  id: string;
+  name: string;
+  message: string;
+  created_at: string;
+  admin_reaction?: string;
+};
+
 export default function Admin() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loadingMsgs, setLoadingMsgs] = useState(true);
   
+  const [signatures, setSignatures] = useState<GuestbookSignature[]>([]);
+  const [loadingSignatures, setLoadingSignatures] = useState(true);
+
   const [stats, setStats] = useState<AnalyticsStats | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     fetchMessages();
+    fetchSignatures();
     fetchStats();
     
     // Real-time polling every 5 seconds
@@ -55,6 +67,27 @@ export default function Admin() {
       setMessages(data);
     }
     setLoadingMsgs(false);
+  };
+
+  const fetchSignatures = async () => {
+    setLoadingSignatures(true);
+    try {
+      const data = await api.getGuestbookSignatures();
+      setSignatures(data);
+    } catch (e) {
+      console.error(e);
+    }
+    setLoadingSignatures(false);
+  };
+
+  const handleReact = async (id: string, reaction: string) => {
+    try {
+      await api.reactToGuestbook(id, reaction);
+      setSignatures(signatures.map(s => s.id === id ? { ...s, admin_reaction: reaction } : s));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to add reaction. Make sure 'admin_reaction' text column exists in Supabase 'guestbook' table.");
+    }
   };
 
   const fetchStats = async () => {
@@ -235,6 +268,61 @@ export default function Admin() {
                 )}
                 <div className="bg-background rounded-xl p-4 text-sm text-foreground whitespace-pre-wrap border border-border/30">
                   {msg.message}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Guestbook Section */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <BookHeart size={20} className="text-primary"/> Guestbook Management
+        </h2>
+        
+        {loadingSignatures ? (
+          <div className="text-muted-foreground">Loading signatures...</div>
+        ) : signatures.length === 0 ? (
+          <div className="bg-secondary/20 border border-border/50 rounded-3xl p-12 text-center text-muted-foreground">
+            No guestbook signatures yet.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {signatures.map((sig) => (
+              <div 
+                key={sig.id} 
+                className="bg-secondary/10 border border-border/50 rounded-2xl p-6 relative"
+              >
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                  <div>
+                    <h3 className="font-bold text-lg">{sig.name}</h3>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(sig.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                  
+                  {/* Reaction Buttons */}
+                  <div className="flex items-center gap-2 bg-background/50 border border-border/50 p-1.5 rounded-full">
+                    {['❤️', '👍', '🔥', '💯', '✨'].map(emoji => (
+                      <button
+                        key={emoji}
+                        onClick={() => handleReact(sig.id, sig.admin_reaction === emoji ? "" : emoji)}
+                        className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition-all ${
+                          sig.admin_reaction === emoji 
+                            ? 'bg-primary/20 scale-110 border border-primary/50' 
+                            : 'hover:bg-secondary hover:scale-110 opacity-70 hover:opacity-100'
+                        }`}
+                        title={sig.admin_reaction === emoji ? "Remove reaction" : `React with ${emoji}`}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="bg-background rounded-xl p-4 text-sm text-foreground whitespace-pre-wrap border border-border/30">
+                  {sig.message}
                 </div>
               </div>
             ))}
