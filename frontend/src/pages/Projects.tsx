@@ -39,19 +39,24 @@ export default function Projects() {
           </div>
         </div>
         
-        <p className="text-sm text-muted-foreground mb-6 leading-relaxed flex-grow">
+        <p className="text-sm text-muted-foreground mb-6 leading-relaxed flex-grow line-clamp-3">
           {project.desc}
         </p>
 
         <div className="space-y-4 mb-6">
           <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Key Highlights</div>
           <ul className="space-y-2">
-            {project.highlights.map((h: string, i: number) => (
-              <li key={i} className="text-sm text-foreground flex items-center gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full" style={{ "--tw-bg-opacity": 1, "before:backgroundColor": project.color } as any}>
-                <span className="w-1.5 h-1.5 rounded-full inline-block shrink-0" style={{ backgroundColor: project.color }} />
-                {h}
+            {project.highlights.slice(0, 2).map((h: string, i: number) => (
+              <li key={i} className="text-sm text-foreground flex items-start gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full inline-block shrink-0 mt-1.5" style={{ backgroundColor: project.color }} />
+                <span className="line-clamp-2">{h}</span>
               </li>
             ))}
+            {project.highlights.length > 2 && (
+              <li className="text-xs text-muted-foreground italic pl-3.5">
+                + {project.highlights.length - 2} more highlight{project.highlights.length - 2 > 1 ? 's' : ''}
+              </li>
+            )}
           </ul>
         </div>
 
