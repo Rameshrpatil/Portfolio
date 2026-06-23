@@ -85,7 +85,7 @@ export default function Projects() {
 
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-          Professional Experience (POCs & Production)
+          Professional Experience (POCs & Production) <span className="text-muted-foreground text-lg font-normal">({workProjects.length})</span>
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {(showAllWork ? workProjects : workProjects.slice(0, 3)).map((project: any, idx: number) => (
@@ -110,7 +110,7 @@ export default function Projects() {
 
       <div>
         <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-          Personal & R&D Projects
+          Personal & R&D Projects <span className="text-muted-foreground text-lg font-normal">({personalProjects.length})</span>
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {(showAllPersonal ? personalProjects : personalProjects.slice(0, 3)).map((project: any, idx: number) => (
