@@ -35,3 +35,6 @@ __pycache__/
 env/
 venv/
 .pytest_cache/
+
+# AI Agent Settings
+.agents/
