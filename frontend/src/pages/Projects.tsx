@@ -15,61 +15,72 @@ export default function Projects() {
   const [showAllWork, setShowAllWork] = useState(false);
   const [showAllPersonal, setShowAllPersonal] = useState(false);
 
-  const ProjectCard = ({ project, idx }: { project: any, idx: number }) => (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: idx * 0.1 } }
-      }}
-      className="flex flex-col bg-secondary/20 border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 transition-colors group"
-    >
-      <div className="h-2 w-full" style={{ backgroundColor: project.color }} />
-      <div className="p-6 flex-grow flex flex-col">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{project.title}</h3>
-            <div className="text-sm font-medium" style={{ color: project.color }}>{project.subtitle}</div>
+  const ProjectCard = ({ project, idx }: { project: any, idx: number }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    return (
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={{
+          hidden: { opacity: 0, y: 30 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: idx * 0.1 } }
+        }}
+        className="flex flex-col bg-secondary/20 border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 transition-colors group"
+      >
+        <div className="h-2 w-full" style={{ backgroundColor: project.color }} />
+        <div className="p-6 flex-grow flex flex-col">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{project.title}</h3>
+              <div className="text-sm font-medium" style={{ color: project.color }}>{project.subtitle}</div>
+            </div>
+            <div className="flex gap-2 text-muted-foreground">
+              <button className="hover:text-primary transition-colors"><Github size={20} /></button>
+              <button className="hover:text-primary transition-colors"><ExternalLink size={20} /></button>
+            </div>
           </div>
-          <div className="flex gap-2 text-muted-foreground">
-            <button className="hover:text-primary transition-colors"><Github size={20} /></button>
-            <button className="hover:text-primary transition-colors"><ExternalLink size={20} /></button>
-          </div>
-        </div>
-        
-        <p className="text-sm text-muted-foreground mb-6 leading-relaxed flex-grow line-clamp-3">
-          {project.desc}
-        </p>
+          
+          <p className={cn("text-sm text-muted-foreground mb-6 leading-relaxed flex-grow transition-all", !isExpanded && "line-clamp-3")}>
+            {project.desc}
+          </p>
 
-        <div className="space-y-4 mb-6">
-          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Key Highlights</div>
-          <ul className="space-y-2">
-            {project.highlights.slice(0, 2).map((h: string, i: number) => (
-              <li key={i} className="text-sm text-foreground flex items-start gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full inline-block shrink-0 mt-1.5" style={{ backgroundColor: project.color }} />
-                <span className="line-clamp-2">{h}</span>
-              </li>
+          <div className="space-y-4 mb-6">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex justify-between items-center">
+              Key Highlights
+              <button 
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-primary lowercase flex items-center gap-1 hover:underline"
+              >
+                {isExpanded ? 'show less' : 'read more'}
+              </button>
+            </div>
+            <ul className="space-y-2">
+              {(isExpanded ? project.highlights : project.highlights.slice(0, 2)).map((h: string, i: number) => (
+                <li key={i} className="text-sm text-foreground flex items-start gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full inline-block shrink-0 mt-1.5" style={{ backgroundColor: project.color }} />
+                  <span className={cn("transition-all", !isExpanded && "line-clamp-2")}>{h}</span>
+                </li>
+              ))}
+              {!isExpanded && project.highlights.length > 2 && (
+                <li className="text-xs text-muted-foreground italic pl-3.5">
+                  + {project.highlights.length - 2} more highlight{project.highlights.length - 2 > 1 ? 's' : ''}
+                </li>
+              )}
+            </ul>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-auto pt-6 border-t border-border/50">
+            {project.tags.map((tag: string, i: number) => (
+              <span key={i} className="text-xs font-medium bg-background border border-border/50 px-2 py-1 rounded">
+                {tag}
+              </span>
             ))}
-            {project.highlights.length > 2 && (
-              <li className="text-xs text-muted-foreground italic pl-3.5">
-                + {project.highlights.length - 2} more highlight{project.highlights.length - 2 > 1 ? 's' : ''}
-              </li>
-            )}
-          </ul>
+          </div>
         </div>
-
-        <div className="flex flex-wrap gap-2 mt-auto pt-6 border-t border-border/50">
-          {project.tags.map((tag: string, i: number) => (
-            <span key={i} className="text-xs font-medium bg-background border border-border/50 px-2 py-1 rounded">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
+      </motion.div>
+    );
+  };
 
   return (
     <div className="min-h-screen pt-32 pb-20 px-6 max-w-6xl mx-auto">
