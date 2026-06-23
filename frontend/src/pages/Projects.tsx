@@ -15,7 +15,7 @@ export default function Projects() {
   const [showAllWork, setShowAllWork] = useState(false);
   const [showAllPersonal, setShowAllPersonal] = useState(false);
 
-  const ProjectCard = ({ project, idx }: { project: any, idx: number }) => {
+  const ProjectCard = ({ project, idx, hideLinks = false }: { project: any, idx: number, hideLinks?: boolean }) => {
     const [descExpanded, setDescExpanded] = useState(false);
     const [highlightsExpanded, setHighlightsExpanded] = useState(false);
 
@@ -37,10 +37,12 @@ export default function Projects() {
               <h3 className="text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{project.title}</h3>
               <div className="text-sm font-medium" style={{ color: project.color }}>{project.subtitle}</div>
             </div>
-            <div className="flex gap-2 text-muted-foreground">
-              <button className="hover:text-primary transition-colors"><Github size={20} /></button>
-              <button className="hover:text-primary transition-colors"><ExternalLink size={20} /></button>
-            </div>
+            {!hideLinks && (
+              <div className="flex gap-2 text-muted-foreground">
+                <button className="hover:text-primary transition-colors"><Github size={20} /></button>
+                <button className="hover:text-primary transition-colors"><ExternalLink size={20} /></button>
+              </div>
+            )}
           </div>
           
           <div className="mb-6 flex-grow">
@@ -120,7 +122,7 @@ export default function Projects() {
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {(showAllWork ? workProjects : workProjects.slice(0, 3)).map((project: any, idx: number) => (
-            <ProjectCard key={idx} project={project} idx={idx} />
+            <ProjectCard key={idx} project={project} idx={idx} hideLinks={true} />
           ))}
         </div>
         {workProjects.length > 3 && (
