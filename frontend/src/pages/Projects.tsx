@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { FolderGit2, ExternalLink, Github } from "lucide-react";
+import { FolderGit2, ExternalLink, Github, ChevronDown, ChevronUp } from "lucide-react";
 import resumeData from "../data/resume.json";
 const { workProjects, personalProjects } = resumeData;
 import { cn } from "@/lib/utils";
@@ -11,6 +12,9 @@ const FADE_UP = {
 };
 
 export default function Projects() {
+  const [showAllWork, setShowAllWork] = useState(false);
+  const [showAllPersonal, setShowAllPersonal] = useState(false);
+
   const ProjectCard = ({ project, idx }: { project: any, idx: number }) => (
     <motion.div
       initial="hidden"
@@ -84,10 +88,24 @@ export default function Projects() {
           Professional Experience (POCs & Production)
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {workProjects.map((project, idx) => (
+          {(showAllWork ? workProjects : workProjects.slice(0, 3)).map((project: any, idx: number) => (
             <ProjectCard key={idx} project={project} idx={idx} />
           ))}
         </div>
+        {workProjects.length > 3 && (
+          <div className="mt-8 flex justify-center">
+            <button 
+              onClick={() => setShowAllWork(!showAllWork)}
+              className="flex items-center gap-2 px-6 py-2 bg-secondary/30 hover:bg-secondary/60 border border-border/50 rounded-full text-sm font-medium transition-colors"
+            >
+              {showAllWork ? (
+                <>Show Less <ChevronUp size={16} /></>
+              ) : (
+                <>Show More <ChevronDown size={16} /></>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       <div>
@@ -95,10 +113,24 @@ export default function Projects() {
           Personal & R&D Projects
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {personalProjects.map((project, idx) => (
+          {(showAllPersonal ? personalProjects : personalProjects.slice(0, 3)).map((project: any, idx: number) => (
             <ProjectCard key={idx} project={project} idx={idx} />
           ))}
         </div>
+        {personalProjects.length > 3 && (
+          <div className="mt-8 flex justify-center">
+            <button 
+              onClick={() => setShowAllPersonal(!showAllPersonal)}
+              className="flex items-center gap-2 px-6 py-2 bg-secondary/30 hover:bg-secondary/60 border border-border/50 rounded-full text-sm font-medium transition-colors"
+            >
+              {showAllPersonal ? (
+                <>Show Less <ChevronUp size={16} /></>
+              ) : (
+                <>Show More <ChevronDown size={16} /></>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
