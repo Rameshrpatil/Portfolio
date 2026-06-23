@@ -16,7 +16,9 @@ export default function Projects() {
   const [showAllPersonal, setShowAllPersonal] = useState(false);
 
   const ProjectCard = ({ project, idx }: { project: any, idx: number }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [descExpanded, setDescExpanded] = useState(false);
+    const [highlightsExpanded, setHighlightsExpanded] = useState(false);
+
     return (
       <motion.div
         initial="hidden"
@@ -41,30 +43,43 @@ export default function Projects() {
             </div>
           </div>
           
-          <p className={cn("text-sm text-muted-foreground mb-6 leading-relaxed flex-grow transition-all", !isExpanded && "line-clamp-3")}>
-            {project.desc}
-          </p>
+          <div className="mb-6 flex-grow">
+            <p className={cn("text-sm text-muted-foreground leading-relaxed transition-all", !descExpanded && "line-clamp-3")}>
+              {project.desc}
+            </p>
+            <button 
+              onClick={() => setDescExpanded(!descExpanded)}
+              className="text-primary text-xs font-medium lowercase hover:underline mt-1"
+            >
+              {descExpanded ? 'show less' : '...read more'}
+            </button>
+          </div>
 
           <div className="space-y-4 mb-6">
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex justify-between items-center">
+            <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Key Highlights
-              <button 
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-primary lowercase flex items-center gap-1 hover:underline"
-              >
-                {isExpanded ? 'show less' : 'read more'}
-              </button>
             </div>
             <ul className="space-y-2">
-              {(isExpanded ? project.highlights : project.highlights.slice(0, 2)).map((h: string, i: number) => (
+              {(highlightsExpanded ? project.highlights : project.highlights.slice(0, 2)).map((h: string, i: number) => (
                 <li key={i} className="text-sm text-foreground flex items-start gap-2 before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full">
                   <span className="w-1.5 h-1.5 rounded-full inline-block shrink-0 mt-1.5" style={{ backgroundColor: project.color }} />
-                  <span className={cn("transition-all", !isExpanded && "line-clamp-2")}>{h}</span>
+                  <span className={cn("transition-all", !highlightsExpanded && "line-clamp-2")}>{h}</span>
                 </li>
               ))}
-              {!isExpanded && project.highlights.length > 2 && (
-                <li className="text-xs text-muted-foreground italic pl-3.5">
+              {!highlightsExpanded && project.highlights.length > 2 && (
+                <li 
+                  className="text-xs text-primary italic pl-3.5 cursor-pointer hover:underline"
+                  onClick={() => setHighlightsExpanded(true)}
+                >
                   + {project.highlights.length - 2} more highlight{project.highlights.length - 2 > 1 ? 's' : ''}
+                </li>
+              )}
+              {highlightsExpanded && project.highlights.length > 2 && (
+                <li 
+                  className="text-xs text-primary italic pl-3.5 cursor-pointer hover:underline"
+                  onClick={() => setHighlightsExpanded(false)}
+                >
+                  show less
                 </li>
               )}
             </ul>
