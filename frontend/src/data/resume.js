@@ -217,6 +217,20 @@ export const personalProjects = [
   color: "#4f8cff",
   },
   {
+    title:      "Geospatial Aerial Land Cover Segmentation",
+    subtitle:   "Computer Vision · Geospatial AI",
+    category:   "Personal R&D",
+    desc:       "Designed and built an end-to-end aerial land cover segmentation model using U-Net, enabling accurate semantic classification of roads, urban areas, green vegetation, and water bodies from geospatial imagery.",
+    highlights: [
+      "U-Net architecture for pixel-level semantic segmentation",
+      "Classification of roads, urban zones, vegetation, and water bodies",
+      "End-to-end geospatial imagery processing pipeline",
+      "Designed for scalability towards aerospace and defence applications",
+    ],
+    tags:  ["Python", "PyTorch", "U-Net", "Deep Learning", "Geospatial", "Semantic Segmentation"],
+    color: "#5b9cf6",
+  },
+  {
     title:      "Resume ATS Scorer & Optimiser",
     subtitle:   "Agentic AI",
     category:   "Personal R&D",
@@ -243,20 +257,6 @@ export const personalProjects = [
     ],
     tags:  ["Python", "Agno", "RAG", "LangChain", "LLMs"],
     color: "#52c97a",
-  },
-  {
-    title:      "Geospatial Aerial Land Cover Segmentation",
-    subtitle:   "Computer Vision · Geospatial AI",
-    category:   "Personal R&D",
-    desc:       "Designed and built an end-to-end aerial land cover segmentation model using U-Net, enabling accurate semantic classification of roads, urban areas, green vegetation, and water bodies from geospatial imagery.",
-    highlights: [
-      "U-Net architecture for pixel-level semantic segmentation",
-      "Classification of roads, urban zones, vegetation, and water bodies",
-      "End-to-end geospatial imagery processing pipeline",
-      "Designed for scalability towards aerospace and defence applications",
-    ],
-    tags:  ["Python", "PyTorch", "U-Net", "Deep Learning", "Geospatial", "Semantic Segmentation"],
-    color: "#5b9cf6",
   },
   {
     title:      "Vehicle Number Plate Parser",
