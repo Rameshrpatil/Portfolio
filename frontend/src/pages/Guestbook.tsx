@@ -117,7 +117,7 @@ export default function Guestbook() {
                   {/* Reaction Badge */}
                   {sig.admin_reaction && (
                     <div className="absolute -top-3 -right-2 md:-right-4 bg-background border border-primary/30 text-primary px-3 py-1.5 rounded-full text-xs font-semibold shadow-xl flex items-center gap-1.5 z-10">
-                      <span className="text-base leading-none">{sig.admin_reaction}</span> Appreciated
+                      <span className="text-base leading-none">{sig.admin_reaction}</span> by Ramesh
                     </div>
                   )}
                   <div className="flex items-center gap-3 mb-3">
