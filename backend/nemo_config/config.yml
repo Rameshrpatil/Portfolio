@@ -1,0 +1,12 @@
+models:
+  - type: main
+    engine: google_genai
+    model: gemini-2.5-flash
+    parameters:
+      temperature: 0.1
+
+rails:
+  dialog:
+    single_call:
+      enabled: False
+      fallback_to_multiple_calls: True

@@ -9,6 +9,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
+from nemoguardrails import RailsConfig
+from nemoguardrails.integrations.langchain.runnable_rails import RunnableRails
 
 router = APIRouter(prefix="/assistant", tags=["assistant"])
 
@@ -67,37 +69,52 @@ def search_portfolio_knowledge(query: str) -> str:
 
 # Initialize Agent
 if api_key:
+    if "GOOGLE_API_KEY" not in os.environ:
+        os.environ["GOOGLE_API_KEY"] = api_key
+    os.environ["NEMOGUARDRAILS_LLM_FRAMEWORK"] = "langchain"
+
     llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7)
     agent_executor = create_react_agent(llm, tools=[search_portfolio_knowledge], prompt=SYSTEM_INSTRUCTION)
+    
+    try:
+        config = RailsConfig.from_path(os.path.join(os.path.dirname(__file__), '..', 'nemo_config'))
+        guardrails = RunnableRails(config, runnable=agent_executor)
+    except Exception as e:
+        print(f"Error initializing guardrails: {e}")
+        guardrails = agent_executor
 else:
-    agent_executor = None
+    guardrails = None
 
 @router.post("/ask")
 async def ask_assistant(req: ChatRequest):
-    if not agent_executor:
+    if not guardrails:
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured in the backend.")
     
     try:
-        # Convert frontend history to LangChain messages
-        langchain_history = []
+        dict_history = []
         for msg in req.history:
             role = msg.get("role")
             text = msg["parts"][0]["text"]
             if role == "user":
-                langchain_history.append(HumanMessage(content=text))
+                dict_history.append({"role": "user", "content": text})
             else:
-                langchain_history.append(AIMessage(content=text))
+                dict_history.append({"role": "assistant", "content": text})
                 
-        # Append the current user message
-        langchain_history.append(HumanMessage(content=req.message))
+        dict_history.append({"role": "user", "content": req.message})
         
-        # Invoke LangGraph Agent
-        # The agent automatically streams/traces to LangSmith if env vars are present
-        result = await agent_executor.ainvoke({"messages": langchain_history})
+        # Invoke Guardrails
+        result = await guardrails.ainvoke({"messages": dict_history})
         
-        # The final message is the last one in the state
-        final_message = result["messages"][-1].content
-        
+        # Extract the final message based on how RunnableRails returns it
+        if isinstance(result, dict) and "messages" in result:
+            final_message = result["messages"][-1].content
+        elif isinstance(result, dict) and "output" in result:
+            final_message = result["output"]
+        elif isinstance(result, str):
+            final_message = result
+        else:
+            final_message = str(result)
+            
         # Ensure final_message is a string (Gemini sometimes returns a list of parts)
         if isinstance(final_message, list):
             text_parts = []

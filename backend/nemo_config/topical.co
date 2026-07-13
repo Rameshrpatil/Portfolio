@@ -1,0 +1,29 @@
+define user ask off topic
+  "Who should I vote for?"
+  "What is the meaning of life?"
+  "Can you write a python script for a game?"
+  "What's your favorite movie?"
+  "Tell me a joke"
+  "How do I fix my car?"
+  "Write me an essay about history."
+  "Give me a recipe for pancakes."
+
+define user ask about resume
+  "What is Ramesh's experience?"
+  "Where did he work?"
+  "What are his skills?"
+  "Tell me about his projects."
+  "How many years of experience?"
+
+define user greeting
+  "Hello"
+  "Hi"
+  "Hey there"
+  "Good morning"
+
+define bot refuse to answer off topic
+  "I am Ramesh's professional AI assistant. I can only answer questions about his professional background, software engineering skills, and portfolio projects."
+
+define flow
+  user ask off topic
+  bot refuse to answer off topic
